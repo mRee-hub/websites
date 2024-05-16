@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XOXO Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #eee;
+        }
+
+        .game {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 1px;
+            background-color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+
+        .cell:hover {
+            background-color: #f1f1f1;
+        }
+
+        .win {
+            background-color: #ccffcc;
+        }
+
+        .lose {
+            background-color: #ffcccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="game"></div>
+    <script>
+        const cells = Array.from({ length: 9 }, () => {
+            const cell = document.createElement('div');
+            cell.classList.add('cell');
+            cell.textContent = '';
+            return cell;
+        });
+
+        const game = document.querySelector('.game');
+        cells.forEach(cell => game.appendChild(cell));
+
+        let player = 'X';
+        let isGameOver = false;
+
+        function checkWin() {
+            const lines = [
+                [0, 1, 2],
+                [3, 4, 5],
+                [6, 7, 8],
+                [0, 3, 6],
+                [1, 4, 7],
+                [2, 5, 8],
+                [0, 4, 8],
+                [2, 4, 6]
+            ];
+
+            for (const line of lines) {
+                const [a, b, c] = line;
+                if (cells[a].textContent && cells[a].textContent === cells[b].textContent && cells[a].textContent === cells[c].textContent) {
+                    cells[a].classList.add('win');
+                    cells[b].classList.add('win');
+                    cells[c].classList.add('win');
+                    isGameOver = true;
+                    return;
+                }
+            }
+        }
+
+        function switchPlayer() {
+            player = player === 'X' ? 'O' : 'X';
+        }
+
+        cells.forEach(cell => {
+            cell.addEventListener('click', () => {
+                if (isGameOver || cell.textContent) return;
+                cell.textContent = player;
+                checkWin();
+                switchPlayer();
+            });
+        });
+    </script>
+</body>
+</html>
